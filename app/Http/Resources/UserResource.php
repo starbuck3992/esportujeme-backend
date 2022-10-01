@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Storage;
 
-class LoginResource extends JsonResource
+class UserResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,8 +17,8 @@ class LoginResource extends JsonResource
     {
         return [
             'id'    => $this->id,
-            'nick' => $this->nick,
-            'avatar' => Storage::url($this->avatar->path)
+            'nickname' => $this->nickname,
+            'avatar' => Storage::url($this->avatar)
         ];
     }
 }

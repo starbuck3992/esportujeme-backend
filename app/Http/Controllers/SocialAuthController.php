@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\LoginResource;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
@@ -56,7 +56,7 @@ class SocialAuthController extends Controller
 
             Auth::login($user, true);
 
-            return (new LoginResource($user));
+            return (new UserResource($user));
 
         }
 
@@ -84,6 +84,6 @@ class SocialAuthController extends Controller
 
         Auth::login($userCreated, true);
 
-        return (new LoginResource($userCreated));
+        return (new UserResource($userCreated));
     }
 }
