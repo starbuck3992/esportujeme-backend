@@ -21,6 +21,8 @@ return new class extends Migration
             $table->string('password');
             $table->boolean('is_admin')->default(0);
             $table->longText('about')->nullable();
+            $table->string('name')->nullable();;
+            $table->string('surname')->nullable();;
             $table->string('avatar')->default('images/avatars/default/user.png');
             $table->string('playstation_profile')->nullable();
             $table->string('xbox_profile')->nullable();
