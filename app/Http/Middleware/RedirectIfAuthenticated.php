@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Resources\LoginResource;
 use App\Http\Resources\UserResource;
 use App\Providers\RouteServiceProvider;
 use Closure;
@@ -25,7 +26,7 @@ class RedirectIfAuthenticated
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
                 if ($request->expectsJson()) {
-                    return new UserResource(Auth::user());
+                    return new LoginResource(Auth::user());
                 }
                 return redirect('/');
             }

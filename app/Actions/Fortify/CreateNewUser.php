@@ -32,8 +32,13 @@ class CreateNewUser implements CreatesNewUsers
             'password' => $this->passwordRules(),
         ])->validate();
 
+        //Suffix
+        $nicknameCount = User::where('nickname', $input['nickname'])->count();
+        $suffixNumber = sprintf('#%04d', $nicknameCount + 2);
+
         return User::create([
             'nickname' => $input['nickname'],
+            'suffix' => $suffixNumber,
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
         ]);

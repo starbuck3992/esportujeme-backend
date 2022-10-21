@@ -22,6 +22,6 @@ class Authenticate extends Middleware
         if (Auth::check()) {
             return $next($request);
         }
-        return redirect()->away(env('SPA_URL'));
+        return response()->json(['message' => 'Unauthorized'], 401);
     }
 }

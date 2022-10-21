@@ -16,11 +16,15 @@ class UserResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'    => $this->id,
-            'nickname' => $this->nickname,
-            'name' => $this->name,
-            'surname' => $this->surname,
-            'avatar' => Storage::url($this->avatar)
+                'nickname' => $this->nickname,
+                'suffix' => $this->suffix,
+                'avatar' => $this->avatar,
+                'about' => $this->about,
+                'name' => $this->name,
+                'surname' => $this->surname,
+                'email' => $this->email,
+                'playstationProfile' => $this->playstation_profile,
+                'xboxProfile' => $this->xbox_profile,
         ];
     }
 }
