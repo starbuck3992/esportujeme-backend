@@ -10,7 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -22,6 +22,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'suffix',
         'email',
         'password',
+        'api_token'
     ];
 
     /**
@@ -32,7 +33,6 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $hidden = [
         'password',
         'remember_token',
-        'is_admin',
         ];
 
     /**
@@ -48,4 +48,5 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Provider::class, 'user_id', 'id');
     }
+
 }

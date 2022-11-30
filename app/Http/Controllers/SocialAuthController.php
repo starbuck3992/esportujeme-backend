@@ -14,7 +14,7 @@ class SocialAuthController extends Controller
     public function redirect($provider)
     {
 
-        $url = Socialite::driver($provider)->redirect()->getTargetUrl();
+        $url = Socialite::driver($provider)->stateless()->redirect();
 
         return response()->json([
             'url' => $url
@@ -25,7 +25,7 @@ class SocialAuthController extends Controller
     //Login user
     public function login($provider)
     {
-        $socialUser = Socialite::driver($provider)->user();
+        $socialUser = Socialite::driver($provider)->stateless()->user();
 
         //Link social account
         if (Auth::check()) {

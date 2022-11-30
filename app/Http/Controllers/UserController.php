@@ -5,16 +5,17 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UserUpdateRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Throwable;
 
 class UserController extends Controller
 {
-    public function show()
+    public function show(Request $request)
     {
         try {
 
-            return new UserResource(User::where('id',Auth::id())->with('providers')->firstorfail());
+            return new UserResource(User::where('id', $request->user()->id)->with('providers')->firstorfail());
 
         } catch (Throwable $e) {
 
