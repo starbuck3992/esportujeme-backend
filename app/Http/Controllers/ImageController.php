@@ -3,35 +3,31 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ImageStoreRequest;
-use App\Models\Image;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Services\UploadService;
 use Illuminate\Support\Facades\Storage;
 use Throwable;
 
 class ImageController extends Controller
 {
+    protected $uploadService;
+
+    public function __construct(UploadService $uploadService)
+    {
+        $this->uploadService = $uploadService;
+    }
+
     public function store(ImageStoreRequest $request)
     {
         try {
 
-        $path = $request->image->store('images');
+            $image = $this->uploadService->uploadImage($request->image);
 
-        $image = new Image();
-
-        $image->user_id = Auth::id();
-        $image->original_name = $request->image->getClientOriginalName();
-        $image->path = $path;
-        $image->extension = $request->image->extension();
-        $image->size = $request->image->getSize();
-
-        $image->save();
-
-        return response()->json([
-            'id' => $image->id,
-            'url' => Storage::url($image->path),
-            'extension' => $image->extension,
-            'size' => $image->size,
-        ]);
+            return response()->json([
+                'id' => $image->id,
+                'url' => Storage::url($image->path),
+                'extension' => $image->extension,
+                'size' => $image->size,
+            ]);
 
         } catch (Throwable $e) {
 

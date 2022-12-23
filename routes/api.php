@@ -30,13 +30,14 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::post('/images', [ImageController::class, 'store']);
 
-    Route::post('/tournaments/register', [TournamentController::class, 'registerParticipant']);
+    Route::post('/tournaments/register/{slug}', [TournamentController::class, 'registerParticipant']);
+    Route::post('/tournaments/save/{slug}', [TournamentController::class, 'saveScore']);
 
     Route::post('/logout', [AuthController::class, 'logout']);
 });
 
 //Admin
-Route::group(['prefix' => 'admin' , 'middleware' => ['admin']], function () {
+Route::group(['prefix' => 'admin','middleware' => ['auth:sanctum']], function () {
     Route::get('/tournaments/create', [TournamentController::class, 'getCreateFormData']);
     Route::post('/tournaments', [TournamentController::class, 'createTournament']);
 });

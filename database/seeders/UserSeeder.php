@@ -58,6 +58,20 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('esportujeme'),
                 'is_admin' => false
             ],
+            [
+                'avatar' => 'images/avatars/default/user.png',
+                'nickname' => 'user7',
+                'email' => 'user7@esportujeme.cz',
+                'password' => Hash::make('esportujeme'),
+                'is_admin' => false
+            ],
+            [
+                'avatar' => 'images/avatars/default/user.png',
+                'nickname' => 'user8',
+                'email' => 'user8@esportujeme.cz',
+                'password' => Hash::make('esportujeme'),
+                'is_admin' => false
+            ],
         ]);
     }
 }

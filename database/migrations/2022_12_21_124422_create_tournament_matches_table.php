@@ -30,7 +30,7 @@ return new class extends Migration {
             $table->integer('score_home')->nullable();
             $table->integer('score_guest')->nullable();
             $table->dateTimeTz('score_save_home')->nullable();
-            $table->dateTimeTz('score_save_quest')->nullable();
+            $table->dateTimeTz('score_save_guest')->nullable();
             $table->integer('bracket_position');
             $table->timestamps();
         });

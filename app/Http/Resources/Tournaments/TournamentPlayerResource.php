@@ -3,8 +3,9 @@
 namespace App\Http\Resources\Tournaments;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
-class TournamentTypeResource extends JsonResource
+class TournamentPlayerResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,8 +16,10 @@ class TournamentTypeResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
-            'name' => $this->name,
+            'nick' => $this->nick,
+            'playstationProfile' => $this->playstation_profile,
+            'xboxProfile' => $this->xbox_profile,
+            'avatar' => Storage::url($this->avatar)
         ];
     }
 }

@@ -31,7 +31,7 @@ class TournamentCreateRequest extends FormRequest
             'tournamentType' => 'required|integer',
             'maxPlayers' => 'required|integer',
             'currency' => 'required|integer',
-            'information' => 'required|max:512',
+            'information' => 'required|max:1024',
             'fee' => 'required|integer',
             'scheduleStart' => 'required|date'
         ];
