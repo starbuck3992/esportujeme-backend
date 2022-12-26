@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\ProviderController;
 use App\Http\Controllers\SocialAuthController;
+use App\Http\Controllers\TournamentMatchController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VerificationController;
 use Illuminate\Support\Facades\Route;
@@ -30,14 +31,15 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::post('/images', [ImageController::class, 'store']);
 
-    Route::post('/tournaments/register/{slug}', [TournamentController::class, 'registerParticipant']);
-    Route::post('/tournaments/save/{slug}', [TournamentController::class, 'saveScore']);
+    Route::post('/tournaments/{slug}/register', [TournamentController::class, 'registerParticipant']);
+    Route::post('/tournaments/{slug}/matches', [TournamentMatchController::class, 'saveScore']);
 
     Route::post('/logout', [AuthController::class, 'logout']);
 });
 
 //Admin
 Route::group(['prefix' => 'admin','middleware' => ['auth:sanctum']], function () {
-    Route::get('/tournaments/create', [TournamentController::class, 'getCreateFormData']);
+    Route::get('/tournaments/formData', [TournamentController::class, 'getCreateFormData']);
     Route::post('/tournaments', [TournamentController::class, 'createTournament']);
+    Route::get('/tournaments/{slug}/matches', [TournamentMatchController::class, 'list']);
 });

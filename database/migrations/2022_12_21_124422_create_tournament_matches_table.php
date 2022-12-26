@@ -44,7 +44,13 @@ return new class extends Migration {
     public function down()
     {
         Schema::table('tournament_matches', function (Blueprint $table) {
-            $table->dropForeign(['tournament_id','team_home','team_guest','user_home','user_guest','screenshot_home','screenshot_guest']);
+            $table->dropForeign(['tournament_id']);
+            $table->dropForeign(['team_home']);
+            $table->dropForeign(['team_guest']);
+            $table->dropForeign(['user_home']);
+            $table->dropForeign(['user_guest']);
+            $table->dropForeign(['screenshot_home']);
+            $table->dropForeign(['screenshot_guest']);
         });
         Schema::dropIfExists('tournament_matches');
     }

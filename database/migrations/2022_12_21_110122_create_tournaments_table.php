@@ -39,9 +39,13 @@ return new class extends Migration {
      */
     public function down()
     {
-        Schema::table('providers', function (Blueprint $table) {
-            $table->dropForeign(['platform_id','game_id','tournament_status_id','tournament_type_id','currency_id']);
-        });
+        Schema::table('tournaments', function (Blueprint $table) {
+            $table->dropForeign(['platform_id']);
+            $table->dropForeign(['game_id']);
+            $table->dropForeign(['tournament_status_id']);
+            $table->dropForeign(['tournament_type_id']);
+            $table->dropForeign(['currency_id']);
+    });
         Schema::dropIfExists('tournaments');
     }
 };

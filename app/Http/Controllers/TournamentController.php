@@ -15,9 +15,12 @@ use App\Models\Game;
 use App\Models\Platform;
 use App\Models\Tournament;
 use App\Models\TournamentType;
+use App\Models\User;
+use App\Notifications\TournamentScoreRejection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 use Throwable;
 use function PHPUnit\Framework\isNull;
@@ -95,7 +98,12 @@ class TournamentController extends Controller
 
             $userId = auth()->id();
 
-            $tournament = Tournament::where('slug', $request->slug)->where('tournament_status_id', 1)->firstorfail();
+            //Check if tournament is open for registration
+            $tournament = Tournament::where('slug', $request->slug)->where('tournament_status_id', 1)->first();
+
+            if(!$tournament) {
+                return response()->json(['message' => 'Do turnaje se nelze registrovat'], 400);
+            }
 
             $playerExist = $tournament->tournamentMatches()->where('user_home', $userId)->orWhere('user_guest', $userId)->exists();
 
@@ -119,7 +127,7 @@ class TournamentController extends Controller
             $currentCount += 1;
 
             if ($currentCount === $tournament->max_players) {
-                $tournament->tournament_status_id = 2; //Register closed
+                $tournament->tournament_status_id = 2; //Registration is closed
             }
 
             $tournament->registered_count = $currentCount;
@@ -150,88 +158,6 @@ class TournamentController extends Controller
             return response()->json(['message' => 'Turnaj nenalezen'], 404);
 
         }
-    }
-
-    public function saveScore(TournamentSaveScoreRequest $request)
-    {
-        try {
-
-            $userId = auth()->id();
-
-            //Check if tournament is in progress
-            $tournament = Tournament::where('slug', $request->slug)->where('tournament_status_id', 3)->firstorfail();
-
-            //Check if player is in tournament
-            $tournamentMatch = $tournament->tournamentMatches()->where('bracket_position', $request->bracketPosition)->where(function ($query) use ($userId) {
-                $query->where('user_home', $userId);
-                $query->orWhere('user_guest', $userId);
-            })->firstOrFail();
-
-            //Check if player can save score
-            $matchSide = $tournamentMatch->user_home === $userId ? 'home' : 'guest';
-
-            $scoreSide = 'score_save_' . $matchSide;
-
-            if (!is_null($tournamentMatch->$scoreSide)) {
-                return response()->json(['message' => 'Výsledek je již zapsán'], 400);
-            }
-
-
-            //Save score
-            if (is_null($tournamentMatch->score_home) && is_null($tournamentMatch->score_guest)) {
-
-                $this->uploadScreenshot($request, $matchSide, $tournamentMatch, $scoreSaveSide);
-                $tournamentMatch->score_home = $request->scoreHome;
-                $tournamentMatch->score_guest = $request->scoreGuest;
-                $tournamentMatch->$scoreSaveSide = Carbon::now();
-
-                $tournamentMatch->save();
-
-                return response()->json(['message' => 'Výsledek úspěšně zapsán']);
-
-            }
-
-            //Save score - confirmed
-            if ($request->confirmed) {
-
-                $scoreSaveSide = 'score_save_' . $matchSide;
-                $tournamentMatch->$scoreSaveSide = Carbon::now();
-                $tournamentMatch->save();
-
-                return response()->json(['message' => 'Výsledek úspěšně zapsán']);
-            }
-
-            //Save score - reject
-            if (!$request->confirmed) {
-
-                $this->uploadScreenshot($request, $matchSide, $tournamentMatch, $scoreSaveSide);
-                $tournamentMatch->$scoreSaveSide = Carbon::now();
-                $tournamentMatch->save();
-
-
-                //TODO notofication for ADMIN
-                return response()->json(['message' => 'Potvrzujeme reklamaci']);
-            }
-
-        } catch (Throwable $e) {
-
-            report($e);
-            return response()->json(['message' => 'Nastala chyba při zápisu výsledků'], 500);
-
-        }
-    }
-
-    private function uploadScreenshot(Request $request, string $matchSide, $tournamentMatch, &$scoreSaveSide): void
-    {
-        $uploadService = new UploadService();
-        $file = $request->file('screenshot');
-
-        $image = $uploadService->uploadImage($file, "images/tournaments/$request->slug");
-
-        $screenshotSide = 'screenshot_' . $matchSide;
-        $tournamentMatch->$screenshotSide = $image->id;
-
-        $scoreSaveSide = 'score_save_' . $matchSide;
     }
 
 }

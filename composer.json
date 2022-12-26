@@ -1,8 +1,8 @@
 {
-    "name": "laravel/laravel",
+    "name": "starbuck3992/esportujeme-api",
     "type": "project",
-    "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "description": "Esportujeme API",
+    "keywords": ["api", "esportujeme"],
     "license": "MIT",
     "require": {
         "php": "^8.0.2",
