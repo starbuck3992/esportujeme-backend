@@ -16,7 +16,7 @@ class TournamentPlayerResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'nick' => $this->nick,
+            'nickname' => $this->nickname,
             'playstationProfile' => $this->playstation_profile,
             'xboxProfile' => $this->xbox_profile,
             'avatar' => Storage::url($this->avatar)
